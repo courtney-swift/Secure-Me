@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | Home</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="/">
+                🔐 SecureMe
+            </a>
+
+            <div class="ms-auto">
+                <a href="#features"
+                   class="btn btn-outline-light me-2">
+                    Explore Features
+                </a>
+
+                <a href="#about"
+                   class="btn btn-primary">
+                    About SecureMe
+                </a>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- Welcome Section -->
+    <main class="container text-center py-5">
+
+        <h1 class="display-4 fw-bold">
+            Welcome to SecureMe
+        </h1>
+
+        <p class="lead mt-3">
+            Your Personal Cybersecurity Dashboard
+        </p>
+
+        <p>
+            Track your online account security,
+            check password strength, and learn
+            how to protect your information.
+        </p>
+
+        <div class="mt-4">
+            <a href="#features"
+               class="btn btn-primary btn-lg me-2">
+                Get Started
+            </a>
+
+            <a href="#about"
+               class="btn btn-outline-secondary btn-lg">
+                Learn More
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Features Section -->
+    <section id="features" class="container py-5">
+
+        <h2 class="text-center mb-4">
+            SecureMe Features
+        </h2>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Password Checker
+                        </h5>
+                        <p class="card-text">
+                            Evaluate password strength
+                            and learn how to improve it.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            MFA Tracker
+                        </h5>
+                        <p class="card-text">
+                            Track which accounts have
+                            multifactor authentication.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Security Score
+                        </h5>
+                        <p class="card-text">
+                            View your account security
+                            information in one place.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="container text-center py-5">
+        <h2>About SecureMe</h2>
+        <p>
+            SecureMe is designed to help people
+            understand and improve their online security.
+        </p>
+    </section>
+
+    
+<!-- SecureMe Authentication Buttons -->
+<div class="container my-3">
+
+    {% if user.is_authenticated %}
+
+        <div class="d-flex flex-wrap align-items-center gap-3">
+
+            <span class="text-success fw-semibold">
+                Welcome, {{ user.username }}!
+            </span>
+
+            <form method="POST"
+                  action="{% url 'logout' %}">
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-outline-danger">
+                    Logout
+                </button>
+
+            </form>
+
+        </div>
+
+    {% else %}
+
+        <div class="d-flex flex-wrap gap-2">
+
+            <a href="{% url 'login' %}"
+                class="btn btn-outline-success">
+                Login
+            </a>
+
+            <a href="{% url 'register' %}"
+                class="btn btn-success">
+                Register
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+</body>
+</html>

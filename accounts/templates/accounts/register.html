@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | Register</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .register-card {
+            border: none;
+            border-radius: 15px;
+        }
+
+        .secureme-brand {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            padding: 10px;
+        }
+
+        .btn-register {
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+
+            <a class="navbar-brand fw-bold"
+               href="{% url 'home' %}">
+                🔐 SecureMe
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- Registration Section -->
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-8 col-lg-5">
+
+                <div class="card register-card shadow-sm">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <h2 class="text-center secureme-brand mb-2">
+                            Create Your Account
+                        </h2>
+
+                        <p class="text-center text-muted mb-4">
+                            Start improving your online security.
+                        </p>
+
+                        <!-- Registration Form -->
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <!-- General Form Errors -->
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+
+                                    {% for error in form.non_field_errors %}
+                                        <p class="mb-0">
+                                            {{ error }}
+                                        </p>
+                                    {% endfor %}
+
+                                </div>
+                            {% endif %}
+
+                            <!-- Username -->
+                            <div class="mb-3">
+
+                                <label for="{{ form.username.id_for_label }}"
+                                       class="form-label">
+                                    Username
+                                </label>
+
+                                {{ form.username }}
+
+                                {% for error in form.username.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                            <!-- Email -->
+                            <div class="mb-3">
+
+                                <label for="{{ form.email.id_for_label }}"
+                                       class="form-label">
+                                    Email Address
+                                </label>
+
+                                {{ form.email }}
+
+                                {% for error in form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                            <!-- Password -->
+                            <div class="mb-3">
+
+                                <label for="{{ form.password1.id_for_label }}"
+                                       class="form-label">
+                                    Password
+                                </label>
+
+                                {{ form.password1 }}
+
+                                {% if form.password1.help_text %}
+                                    <div class="form-text">
+                                        {{ form.password1.help_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in form.password1.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                            <!-- Confirm Password -->
+                            <div class="mb-4">
+
+                                <label for="{{ form.password2.id_for_label }}"
+                                       class="form-label">
+                                    Confirm Password
+                                </label>
+
+                                {{ form.password2 }}
+
+                                {% for error in form.password2.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button
+                                type="submit"
+                                class="btn btn-success btn-register w-100">
+                                Create Account
+                            </button>
+
+                        </form>
+
+                        <hr class="my-4">
+
+                        <p class="text-center text-muted mb-0">
+                            Already have an account?
+                            <a href="{% url 'login' %}"
+                                class="text-success fw-semibold">
+                                Login here
+                            </a>
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
