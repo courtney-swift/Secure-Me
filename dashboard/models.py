@@ -1,12 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+
+
+
+from django.db import models
+from django.conf import settings
 
 
 class SecurityAccount(models.Model):
 
     user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="security_accounts"
     )
 
     account_name = models.CharField(
@@ -42,5 +49,3 @@ class SecurityAccount(models.Model):
 
     def __str__(self):
         return self.account_name
-
-# Create your models here.

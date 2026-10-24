@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | Add Account</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .form-card {
+            border: none;
+            border-radius: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-dark bg-dark">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                🔐 SecureMe
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-9 col-lg-7">
+
+                <div class="card form-card shadow-sm">
+
+                    <div class="card-body p-4 p-md-5">
+
+                        <h2 class="mb-2">
+                            Add Security Account
+                        </h2>
+
+                        <p class="text-muted mb-4">
+                            Track the security of an online account.
+                            Do not enter your actual password.
+                        </p>
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <!-- ACCOUNT NAME -->
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Account Name
+                                </label>
+
+                                {{ form.account_name }}
+
+                                {% for error in form.account_name.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- WEBSITE -->
+                            <div class="mb-3">
+
+                                <label class="form-label">
+                                    Website
+                                </label>
+
+                                {{ form.website }}
+
+                                {% for error in form.website.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- PASSWORD STRENGTH -->
+                            <div class="mb-4">
+
+                                <label class="form-label">
+                                    Password Strength
+                                </label>
+
+                                {{ form.password_strength }}
+
+                                {% for error in form.password_strength.errors %}
+                                    <div class="text-danger small">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+
+                            <!-- MFA -->
+                            <div class="form-check mb-3">
+
+                                {{ form.mfa_enabled }}
+
+                                <label class="form-check-label">
+                                    Multi-Factor Authentication Enabled
+                                </label>
+
+                            </div>
+
+
+                            <!-- UNIQUE PASSWORD -->
+                            <div class="form-check mb-3">
+
+                                {{ form.password_unique }}
+
+                                <label class="form-check-label">
+                                    Password Is Unique
+                                </label>
+
+                            </div>
+
+
+                            <!-- RECOVERY UPDATED -->
+                            <div class="form-check mb-4">
+
+                                {{ form.recovery_updated }}
+
+                                <label class="form-check-label">
+                                    Recovery Information Is Updated
+                                </label>
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-success w-100">
+                                Save Security Account
+                            </button>
+
+                        </form>
+
+                        <hr class="my-4">
+
+                        <a href="{% url 'account_list' %}" class="btn btn-outline-secondary w-100">
+                            Back to My Accounts
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>

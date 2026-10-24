@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | My Security Accounts</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        body {
+            background-color: #f4f7fb;
+            min-height: 100vh;
+        }
+
+        .account-card {
+            border: none;
+            border-radius: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-dark bg-dark">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold"
+                href="{% url 'home' %}">
+                🔐 SecureMe
+            </a>
+
+            <a href="{% url 'profile' %}" class="btn btn-outline-light btn-sm">
+                My Profile
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="container py-5">
+
+        <div class="d-flex flex-wrap
+                    justify-content-between align-items-center gap-3 mb-4">
+
+            <div>
+
+                <h2 class="mb-1">
+                    My Security Accounts
+                </h2>
+
+                <p class="text-muted mb-0">
+                    Monitor your online account security.
+                </p>
+
+            </div>
+
+            <a href="{% url 'add_account' %}" class="btn btn-success">
+                + Add Account
+            </a>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            {% for account in accounts %}
+
+                <div class="col-md-6 col-lg-4">
+
+                    <div class="card account-card shadow-sm h-100">
+
+                        <div class="card-body p-4">
+
+                            <h5 class="card-title">
+                                {{ account.account_name }}
+                            </h5>
+
+                            <p class="text-muted small">
+                                {{ account.website|default:"No website provided" }}
+                            </p>
+
+                            <hr>
+
+                            <!-- MFA STATUS -->
+                            <p>
+                                <strong>MFA:</strong>
+
+                                {% if account.mfa_enabled %}
+
+                                    <span class="badge bg-success">
+                                        Enabled
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Not Enabled
+                                    </span>
+
+                                {% endif %}
+                            </p>
+
+
+                            <!-- PASSWORD STRENGTH -->
+                            <p>
+                                <strong>Password Strength:</strong>
+
+                                {% if account.password_strength == "Strong" %}
+
+                                    <span class="badge bg-success">
+                                        Strong
+                                    </span>
+
+                                {% elif account.password_strength == "Medium" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Medium
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Weak
+                                    </span>
+
+                                {% endif %}
+                            </p>
+
+
+                            <!-- UNIQUE PASSWORD -->
+                            <p>
+                                <strong>Unique Password:</strong>
+
+                                {% if account.password_unique %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </p>
+
+
+                            <!-- RECOVERY INFORMATION -->
+                            <p class="mb-0">
+                                <strong>Recovery Updated:</strong>
+
+                                {% if account.recovery_updated %}
+                                    Yes
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% empty %}
+
+                <div class="col-12">
+
+                    <div class="alert alert-info">
+
+                        You haven't added any security accounts yet.
+
+                        <a href="{% url 'add_account' %}">
+                            Add your first account
+                        </a>.
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </main>
+
+</body>
+</html>

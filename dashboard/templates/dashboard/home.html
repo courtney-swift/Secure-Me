@@ -15,9 +15,28 @@
     >
 </head>
 
+<!-- Temporary authentication status display -->
+<div class="container mt-3">
+
+    {% if user.is_authenticated %}
+
+        <div class="alert alert-success">
+            Logged in as:
+            <strong>{{ user.username }}</strong>
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-warning">
+            You are not logged in.
+        </div>
+
+    {% endif %}
+
+</div>
+
 <body class="bg-light">
 
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
 
@@ -147,8 +166,17 @@
                 Welcome, {{ user.username }}!
             </span>
 
+            <a href="{% url 'profile' %}"
+                class="btn btn-outline-primary">
+                My Profile
+            </a>    
+
+            <a href="{% url 'account_list' %}" class="btn btn-outline-success">
+                My Security Accounts
+            </a>
+
             <form method="POST"
-                  action="{% url 'logout' %}">
+                action="{% url 'logout' %}">
 
                 {% csrf_token %}
 
