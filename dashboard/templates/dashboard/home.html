@@ -2,214 +2,420 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
 
-    <title>SecureMe | Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap CSS -->
+    <title>SecureMe | Security Dashboard</title>
+
+    <!-- BOOTSTRAP CSS -->
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
+
 </head>
-
-<!-- Temporary authentication status display -->
-<div class="container mt-3">
-
-    {% if user.is_authenticated %}
-
-        <div class="alert alert-success">
-            Logged in as:
-            <strong>{{ user.username }}</strong>
-        </div>
-
-    {% else %}
-
-        <div class="alert alert-warning">
-            You are not logged in.
-        </div>
-
-    {% endif %}
-
-</div>
 
 <body class="bg-light">
 
+    <!-- NAVIGATION BAR -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
         <div class="container">
 
-            <a class="navbar-brand fw-bold" href="/">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
                 🔐 SecureMe
             </a>
 
-            <div class="ms-auto">
-                <a href="#features"
-                   class="btn btn-outline-light me-2">
-                    Explore Features
+            <div class="d-flex flex-wrap gap-2">
+
+                <a href="{% url 'account_list' %}" class="btn btn-outline-light btn-sm">
+                    My Accounts
                 </a>
 
-                <a href="#about"
-                   class="btn btn-primary">
-                    About SecureMe
+                <a href="{% url 'add_account' %}" class="btn btn-success btn-sm">
+                    + Add Account
                 </a>
+
+                <a href="{% url 'profile' %}" class="btn btn-outline-light btn-sm">
+                    My Profile
+                </a>
+
+                <form method="POST" action="{% url 'logout' %}">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="btn btn-outline-warning btn-sm">
+                        Logout
+                    </button>
+
+                </form>
+
             </div>
 
         </div>
+
     </nav>
 
-    <!-- Welcome Section -->
-    <main class="container text-center py-5">
 
-        <h1 class="display-4 fw-bold">
-            Welcome to SecureMe
-        </h1>
+    <!-- MAIN DASHBOARD -->
+    <main class="container py-5">
 
-        <p class="lead mt-3">
-            Your Personal Cybersecurity Dashboard
-        </p>
+        <!-- PAGE HEADER -->
+        <div class="mb-4">
 
-        <p>
-            Track your online account security,
-            check password strength, and learn
-            how to protect your information.
-        </p>
+            <h1 class="fw-bold">
+                Security Dashboard
+            </h1>
 
-        <div class="mt-4">
-            <a href="#features"
-               class="btn btn-primary btn-lg me-2">
-                Get Started
-            </a>
+            <p class="text-muted">
+                Welcome back, {{ request.user.username }}!
+                Here's an overview of your account security.
+            </p>
 
-            <a href="#about"
-               class="btn btn-outline-secondary btn-lg">
-                Learn More
-            </a>
         </div>
+
+
+        <!-- OVERALL SECURITY SCORE CARD -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h4 class="fw-bold">
+                    Overall Security Score
+                </h4>
+
+                {% if total_accounts > 0 %}
+
+                    <h1 class="display-4 fw-bold mt-3">
+                        {{ overall_score }}/100
+                    </h1>
+
+                    <!-- SECURITY LEVEL -->
+                    <p>
+
+                        {% if overall_level == "Good" %}
+
+                            <span class="badge bg-success fs-6">
+                                Good Security
+                            </span>
+
+                        {% elif overall_level == "Moderate" %}
+
+                            <span class="badge bg-warning text-dark fs-6">
+                                Moderate Security
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-danger fs-6">
+                                Needs Improvement
+                            </span>
+
+                        {% endif %}
+
+                    </p>
+
+
+                    <!-- OVERALL SCORE PROGRESS BAR -->
+                    <div class="progress"
+                        role="progressbar"
+                        aria-label="Overall security score"
+                        aria-valuenow="{{ overall_score }}"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                        style="height: 20px;">
+
+                        {% if overall_score >= 80 %}
+
+                            <div class="progress-bar bg-success" style="width: {{ overall_score }}%;">
+                            </div>
+
+                        {% elif overall_score >= 50 %}
+
+                            <div class="progress-bar bg-warning" style="width: {{ overall_score }}%;">
+                            </div>
+
+                        {% else %}
+
+                            <div class="progress-bar bg-danger" style="width: {{ overall_score }}%;">
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <p class="text-muted mt-3 mb-0">
+                        Your score is calculated from the
+                        security settings of your tracked accounts.
+                    </p>
+
+                {% else %}
+
+                    <p class="text-muted mt-3">
+                        No security score available yet.
+                        Add your first account to begin.
+                    </p>
+
+                    <a href="{% url 'add_account' %}"
+                        class="btn btn-primary">
+                        Add Your First Account
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- SECURITY STATISTICS -->
+        <div class="row g-4 mb-4">
+
+            <!-- TOTAL ACCOUNTS -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>Total Accounts</h5>
+
+                        <h2 class="fw-bold text-primary">
+                            {{ total_accounts }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts being tracked
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MFA ENABLED -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>MFA Enabled</h5>
+
+                        <h2 class="fw-bold text-success">
+                            {{ mfa_enabled }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts with MFA enabled
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MFA DISABLED -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>MFA Disabled</h5>
+
+                        <h2 class="fw-bold text-danger">
+                            {{ mfa_disabled }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts without MFA
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- GOOD SECURITY -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>Good Security</h5>
+
+                        <h2 class="fw-bold text-success">
+                            {{ good_security }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts scoring 80–100
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MODERATE SECURITY -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>Moderate Security</h5>
+
+                        <h2 class="fw-bold text-warning">
+                            {{ moderate_security }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts scoring 50–79
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- NEEDS IMPROVEMENT -->
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body text-center p-4">
+
+                        <h5>Needs Improvement</h5>
+
+                        <h2 class="fw-bold text-danger">
+                            {{ needs_improvement }}
+                        </h2>
+
+                        <p class="text-muted mb-0">
+                            Accounts scoring below 50
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACCOUNTS NEEDING ATTENTION -->
+        <div class="card shadow-sm border-0">
+
+            <div class="card-body p-4">
+
+                <h4 class="fw-bold mb-3">
+                    Accounts Needing Attention
+                </h4>
+
+                {% if accounts_needing_attention %}
+
+                    <div class="list-group">
+
+                        {% for account in accounts_needing_attention %}
+
+                            <div class="list-group-item">
+
+                                <div class="d-flex flex-wrap
+                                            justify-content-between
+                                            align-items-center gap-2">
+
+                                    <div>
+
+                                        <h6 class="mb-1">
+                                            {{ account.account_name }}
+                                        </h6>
+
+                                        <span class="badge bg-danger">
+                                            Needs Improvement
+                                        </span>
+
+                                    </div>
+
+                                    <a href="{% url 'account_detail' account.id %}"
+                                        class="btn btn-outline-primary btn-sm">
+                                        View Account
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    {% if total_accounts == 0 %}
+
+                        <p class="text-muted mb-0">
+                            Add an account to begin your security assessment.
+                        </p>
+
+                    {% else %}
+
+                        <div class="alert alert-success mb-0">
+                            No accounts currently score below 50.
+                        </div>
+
+                    {% endif %}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- DASHBOARD ACTIONS -->
+        <div class="d-flex flex-wrap gap-3 mt-4">
+
+            <a href="{% url 'account_list' %}"
+                class="btn btn-primary">
+                View All Accounts
+            </a>
+
+            <a href="{% url 'add_account' %}"
+                class="btn btn-success">
+                + Add Security Account
+            </a>
+
+            <a href="{% url 'password_checker' %}"
+                class="btn btn-outline-primary">
+                    🔐 Password Security Tools
+            </a>
+
+        </div>
+
+        <p class="text-muted small mt-4">
+            SecureMe scores are educational estimates based on
+            user-reported security settings, not independent
+            verification of account security.
+        </p>
 
     </main>
-
-    <!-- Features Section -->
-    <section id="features" class="container py-5">
-
-        <h2 class="text-center mb-4">
-            SecureMe Features
-        </h2>
-
-        <div class="row g-4">
-
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Password Checker
-                        </h5>
-                        <p class="card-text">
-                            Evaluate password strength
-                            and learn how to improve it.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            MFA Tracker
-                        </h5>
-                        <p class="card-text">
-                            Track which accounts have
-                            multifactor authentication.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            Security Score
-                        </h5>
-                        <p class="card-text">
-                            View your account security
-                            information in one place.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="container text-center py-5">
-        <h2>About SecureMe</h2>
-        <p>
-            SecureMe is designed to help people
-            understand and improve their online security.
-        </p>
-    </section>
-
-    
-<!-- SecureMe Authentication Buttons -->
-<div class="container my-3">
-
-    {% if user.is_authenticated %}
-
-        <div class="d-flex flex-wrap align-items-center gap-3">
-
-            <span class="text-success fw-semibold">
-                Welcome, {{ user.username }}!
-            </span>
-
-            <a href="{% url 'profile' %}"
-                class="btn btn-outline-primary">
-                My Profile
-            </a>    
-
-            <a href="{% url 'account_list' %}" class="btn btn-outline-success">
-                My Security Accounts
-            </a>
-
-            <form method="POST"
-                action="{% url 'logout' %}">
-
-                {% csrf_token %}
-
-                <button
-                    type="submit"
-                    class="btn btn-outline-danger">
-                    Logout
-                </button>
-
-            </form>
-
-        </div>
-
-    {% else %}
-
-        <div class="d-flex flex-wrap gap-2">
-
-            <a href="{% url 'login' %}"
-                class="btn btn-outline-success">
-                Login
-            </a>
-
-            <a href="{% url 'register' %}"
-                class="btn btn-success">
-                Register
-            </a>
-
-        </div>
-
-    {% endif %}
-
-</div>
-
 
 </body>
 </html>

@@ -1,0 +1,625 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | Edit Security Account</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+</head>
+
+
+<body class="bg-light">
+
+    <!-- ================================= -->
+    <!-- NAVIGATION BAR                    -->
+    <!-- ================================= -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold"
+               href="{% url 'home' %}">
+
+                🔐 SecureMe
+
+            </a>
+
+            <div class="d-flex flex-wrap gap-2">
+
+                <!-- DASHBOARD -->
+
+                <a href="{% url 'home' %}"
+                   class="btn btn-outline-light btn-sm">
+
+                    Dashboard
+
+                </a>
+
+
+                <!-- MY ACCOUNTS -->
+
+                <a href="{% url 'account_list' %}"
+                   class="btn btn-outline-light btn-sm">
+
+                    My Accounts
+
+                </a>
+
+
+                <!-- PASSWORD TOOLS -->
+
+                <a href="{% url 'password_checker' %}"
+                   class="btn btn-outline-light btn-sm">
+
+                    Password Tools
+
+                </a>
+
+
+                <!-- PROFILE -->
+
+                <a href="{% url 'profile' %}"
+                   class="btn btn-outline-light btn-sm">
+
+                    Profile
+
+                </a>
+
+
+                <!-- LOGOUT -->
+
+                <form method="POST"
+                      action="{% url 'logout' %}">
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-outline-danger btn-sm">
+
+                        Logout
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ================================= -->
+    <!-- MAIN CONTENT                      -->
+    <!-- ================================= -->
+
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-12 col-md-10 col-lg-8">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body p-4 p-md-5">
+
+
+                        <!-- ================================= -->
+                        <!-- PAGE HEADING                      -->
+                        <!-- ================================= -->
+
+                        <h1 class="h3 fw-bold mb-3">
+
+                            ✏️ Edit Security Account
+
+                        </h1>
+
+
+                        <p class="text-muted mb-4">
+
+                            Update your account information
+                            and security settings.
+
+                        </p>
+
+
+                        <!-- ================================= -->
+                        <!-- CURRENT ACCOUNT INFORMATION      -->
+                        <!-- ================================= -->
+
+                        <div class="alert alert-primary">
+
+                            <h2 class="h5 fw-bold">
+
+                                Current Account Information
+
+                            </h2>
+
+                            <p class="mb-2">
+
+                                <strong>Account:</strong>
+
+                                {{ account.account_name }}
+
+                            </p>
+
+                            <p class="mb-2">
+
+                                <strong>Website:</strong>
+
+                                {{ account.website|default:"Not provided" }}
+
+                            </p>
+
+                            <p class="mb-0">
+
+                                <strong>Current Password Strength:</strong>
+
+                                {% if account.password_strength == "Strong" %}
+
+                                    <span class="badge bg-success">
+
+                                        Strong
+
+                                    </span>
+
+                                {% elif account.password_strength == "Medium" %}
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Medium
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+
+                                        Weak
+
+                                    </span>
+
+                                {% endif %}
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- EDIT ACCOUNT FORM                 -->
+                        <!-- ================================= -->
+
+                        <form method="POST"
+                              id="securityAccountForm">
+
+                            {% csrf_token %}
+
+
+                            <!-- ================================= -->
+                            <!-- FORM ERRORS                       -->
+                            <!-- ================================= -->
+
+                            {% if form.non_field_errors %}
+
+                                <div class="alert alert-danger">
+
+                                    {{ form.non_field_errors }}
+
+                                </div>
+
+                            {% endif %}
+
+
+                            <!-- ================================= -->
+                            <!-- ACCOUNT NAME                      -->
+                            <!-- ================================= -->
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="{{ form.account_name.id_for_label }}"
+                                    class="form-label fw-bold">
+
+                                    Account Name
+
+                                </label>
+
+                                {{ form.account_name }}
+
+                                {{ form.account_name.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- WEBSITE                           -->
+                            <!-- ================================= -->
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="{{ form.website.id_for_label }}"
+                                    class="form-label fw-bold">
+
+                                    Website
+
+                                </label>
+
+                                {{ form.website }}
+
+                                {{ form.website.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- MULTI-FACTOR AUTHENTICATION      -->
+                            <!-- ================================= -->
+
+                            <div class="form-check mb-3">
+
+                                {{ form.mfa_enabled }}
+
+                                <label
+                                    for="{{ form.mfa_enabled.id_for_label }}"
+                                    class="form-check-label">
+
+                                    Multi-Factor Authentication Enabled
+
+                                </label>
+
+                                {{ form.mfa_enabled.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- UNIQUE PASSWORD                   -->
+                            <!-- ================================= -->
+
+                            <div class="form-check mb-3">
+
+                                {{ form.password_unique }}
+
+                                <label
+                                    for="{{ form.password_unique.id_for_label }}"
+                                    class="form-check-label">
+
+                                    Password Is Unique
+
+                                </label>
+
+                                {{ form.password_unique.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- RECOVERY INFORMATION              -->
+                            <!-- ================================= -->
+
+                            <div class="form-check mb-4">
+
+                                {{ form.recovery_updated }}
+
+                                <label
+                                    for="{{ form.recovery_updated.id_for_label }}"
+                                    class="form-check-label">
+
+                                    Recovery Information Updated
+
+                                </label>
+
+                                {{ form.recovery_updated.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD SECURITY TOOLS           -->
+                            <!-- ================================= -->
+
+                            <hr class="my-4">
+
+
+                            <h2 class="h4 fw-bold mb-3">
+
+                                🔐 Password Security Tools
+
+                            </h2>
+
+
+                            <p class="text-muted">
+
+                                Generate a new password or
+                                evaluate the strength of a
+                                proposed password.
+
+                            </p>
+
+
+                            <!-- SECURITY NOTICE -->
+
+                            <div class="alert alert-info small">
+
+                                <strong>Security Notice:</strong>
+
+                                SecureMe evaluates passwords
+                                locally in your browser.
+
+                                Your actual password is not
+                                stored in the SecureMe database.
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD INPUT                    -->
+                            <!-- ================================= -->
+
+                            <div class="mb-3">
+
+                                <label
+                                    for="accountPasswordInput"
+                                    class="form-label fw-bold">
+
+                                    Proposed Password
+
+                                </label>
+
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        id="accountPasswordInput"
+                                        class="form-control"
+                                        placeholder="Enter or generate a password"
+                                        autocomplete="off"
+                                        spellcheck="false"
+                                        autocapitalize="off"
+                                    >
+
+
+                                    <!-- SHOW PASSWORD -->
+
+                                    <button
+                                        type="button"
+                                        id="showAccountPassword"
+                                        class="btn btn-outline-secondary">
+
+                                        Show
+
+                                    </button>
+
+                                </div>
+
+                                <div class="form-text">
+
+                                    This field is only used
+                                    for local password evaluation.
+
+                                    It will not be submitted
+                                    with the form.
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD GENERATOR                -->
+                            <!-- ================================= -->
+
+                            <div class="d-grid gap-2 mb-3">
+
+
+                                <!-- GENERATE PASSWORD -->
+
+                                <button
+                                    type="button"
+                                    id="generateAccountPassword"
+                                    class="btn btn-outline-primary">
+
+                                    🔑 Generate Secure Password
+
+                                </button>
+
+
+                                <!-- COPY PASSWORD -->
+
+                                <button
+                                    type="button"
+                                    id="copyAccountPassword"
+                                    class="btn btn-outline-success">
+
+                                    📋 Copy Password
+
+                                </button>
+
+
+                                <!-- EVALUATE PASSWORD -->
+
+                                <button
+                                    type="button"
+                                    id="evaluateAccountPassword"
+                                    class="btn btn-outline-secondary">
+
+                                    🔍 Evaluate Password Strength
+
+                                </button>
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD STRENGTH RESULT          -->
+                            <!-- ================================= -->
+
+                            <div class="mb-3">
+
+                                <span class="fw-bold">
+
+                                    New Password Strength:
+
+                                </span>
+
+
+                                <span
+                                    id="accountPasswordStrength"
+                                    class="badge bg-secondary">
+
+                                    Not Evaluated
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- HIDDEN PASSWORD STRENGTH FIELD    -->
+                            <!-- ================================= -->
+
+                            {{ form.evaluated_password_strength }}
+
+                            {{ form.evaluated_password_strength.errors }}
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD CONFIRMATION             -->
+                            <!-- ================================= -->
+
+                            <div class="form-check mb-3">
+
+                                {{ form.confirm_password_applied }}
+
+                                <label
+                                    for="{{ form.confirm_password_applied.id_for_label }}"
+                                    class="form-check-label">
+
+                                    I confirm that I have applied
+                                    the evaluated password to
+                                    this external account.
+
+                                </label>
+
+                                {{ form.confirm_password_applied.errors }}
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD FEEDBACK                 -->
+                            <!-- ================================= -->
+
+                            <div
+                                id="accountPasswordFeedback"
+                                class="alert alert-secondary small"
+                                role="status"
+                                aria-live="polite">
+
+                                No new password has been
+                                evaluated yet.
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- PASSWORD CHANGE INFORMATION       -->
+                            <!-- ================================= -->
+
+                            <div class="alert alert-warning small">
+
+                                <strong>Important:</strong>
+
+                                Generating a password in SecureMe
+                                does not automatically update
+                                your password on another website.
+
+                                You must visit the external website,
+                                change the password there,
+                                and then confirm the change here.
+
+                            </div>
+
+
+                            <!-- ================================= -->
+                            <!-- SAVE CHANGES BUTTON               -->
+                            <!-- ================================= -->
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100 mt-3">
+
+                                💾 Save Changes
+
+                            </button>
+
+                        </form>
+
+
+                        <!-- ================================= -->
+                        <!-- BACK TO ACCOUNT DETAILS           -->
+                        <!-- ================================= -->
+
+                        <a
+                            href="{% url 'account_detail' account.id %}"
+                            class="btn btn-outline-secondary w-100 mt-3">
+
+                            ← Back to Account Details
+
+                        </a>
+
+
+                        <!-- ================================= -->
+                        <!-- BACK TO MY ACCOUNTS                -->
+                        <!-- ================================= -->
+
+                        <a
+                            href="{% url 'account_list' %}"
+                            class="btn btn-outline-dark w-100 mt-2">
+
+                            Back to My Accounts
+
+                        </a>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- ================================= -->
+    <!-- JAVASCRIPT                        -->
+    <!-- ================================= -->
+
+    <script
+        src="{% static 'dashboard/js/account_password_tools.js' %}"
+        defer>
+    </script>
+
+</body>
+
+</html>

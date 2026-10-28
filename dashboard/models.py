@@ -1,10 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.conf import settings
-
-
-
-from django.db import models
 from django.conf import settings
 
 
@@ -46,6 +40,46 @@ class SecurityAccount(models.Model):
     recovery_updated = models.BooleanField(
         default=False
     )
+
+    # CALCULATE ACCOUNT SECURITY SCORE
+    def calculate_security_score(self):
+
+        score = 0
+
+        # MULTI-FACTOR AUTHENTICATION
+        if self.mfa_enabled:
+            score += 35
+
+        # PASSWORD STRENGTH
+        if self.password_strength == "Strong":
+            score += 30
+
+        elif self.password_strength == "Medium":
+            score += 15
+
+        # UNIQUE PASSWORD
+        if self.password_unique:
+            score += 20
+
+        # RECOVERY INFORMATION
+        if self.recovery_updated:
+            score += 15
+
+        return score
+
+    # DETERMINE SECURITY LEVEL
+    def get_security_level(self):
+    
+            score = self.calculate_security_score()
+    
+            if score >= 80:
+                return "Good"
+    
+            elif score >= 50:
+                return "Moderate"
+    
+            else:
+                return "Needs Improvement"
 
     def __str__(self):
         return self.account_name

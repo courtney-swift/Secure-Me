@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SecureMe | My Security Accounts</title>
 
@@ -163,6 +162,87 @@
                                 {% endif %}
                             </p>
 
+                            <!-- SECURITY SCORE SECTION -->
+<hr class="my-3">
+
+<h6 class="fw-bold">
+    Security Score
+</h6>
+
+<!-- SCORE AND SECURITY LEVEL -->
+<div class="d-flex justify-content-between mb-2">
+
+    <span class="fw-bold">
+        {{ account.security_score }}/100
+    </span>
+
+    {% if account.security_level == "Good" %}
+
+        <span class="badge bg-success">
+            Good
+        </span>
+
+    {% elif account.security_level == "Moderate" %}
+
+        <span class="badge bg-warning text-dark">
+            Moderate
+        </span>
+
+    {% else %}
+
+        <span class="badge bg-danger">
+            Needs Improvement
+        </span>
+
+    {% endif %}
+
+</div>
+
+<!-- SECURITY SCORE PROGRESS BAR -->
+<div class="progress" role="progressbar" aria-label="Account security score" aria-valuenow="{{ account.security_score }}" aria-valuemin="0" aria-valuemax="100" style="height: 12px;">
+
+    {% if account.security_score >= 80 %}
+
+        <div class="progress-bar bg-success" style="width: {{ account.security_score }}%;">
+        </div>
+
+    {% elif account.security_score >= 50 %}
+
+        <div class="progress-bar bg-warning"
+            style="width: {{ account.security_score }}%;">
+        </div>
+
+    {% else %}
+
+        <div class="progress-bar bg-danger"
+            style="width: {{ account.security_score }}%;">
+        </div>
+
+    {% endif %}
+
+</div>
+
+<!-- ACCOUNT ACTION BUTTONS -->
+<hr class="my-4">
+
+<div class="d-flex flex-wrap gap-2">
+
+    <!-- VIEW -->
+    <a href="{% url 'account_detail' account.id %}" class="btn btn-outline-primary btn-sm flex-fill">
+        View
+    </a>
+
+    <!-- EDIT -->
+    <a href="{% url 'edit_account' account.id %}" class="btn btn-outline-success btn-sm flex-fill">
+        Edit
+    </a>
+
+    <!-- DELETE -->
+    <a href="{% url 'delete_account' account.id %}" class="btn btn-outline-danger btn-sm flex-fill">
+        Delete
+    </a>
+
+</div>
                         </div>
 
                     </div>

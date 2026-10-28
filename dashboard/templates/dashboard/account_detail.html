@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SecureMe | Account Details</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+</head>
+
+<body class="bg-light">
+
+    <!-- NAVIGATION -->
+    <nav class="navbar navbar-dark bg-dark">
+
+        <div class="container">
+
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                SecureMe
+            </a>
+
+            <a href="{% url 'account_list' %}" class="btn btn-outline-light btn-sm">
+                My Accounts
+            </a>
+
+        </div>
+
+    </nav>
+
+    <!-- ACCOUNT DETAILS -->
+    <main class="container py-5">
+
+        <div class="row justify-content-center">
+
+            <div class="col-md-8">
+
+                <div class="card shadow-sm border-0">
+
+                    <div class="card-body p-4">
+
+                        <h2>{{ account.account_name }}</h2>
+
+                        <p class="text-muted">
+                            {{ account.website|default:"No website provided" }}
+                        </p>
+
+                        <hr>
+
+                        <h5>Security Information</h5>
+
+                        <!-- MFA -->
+                        <p>
+                            <strong>MFA Enabled:</strong>
+
+                            {% if account.mfa_enabled %}
+                                <span class="badge bg-success">Yes</span>
+                            {% else %}
+                                <span class="badge bg-danger">No</span>
+                            {% endif %}
+                        </p>
+
+                        <!-- PASSWORD STRENGTH -->
+                        <p>
+                            <strong>Password Strength:</strong>
+
+                            {{ account.password_strength }}
+                        </p>
+
+                        <!-- UNIQUE PASSWORD -->
+                        <p>
+                            <strong>Unique Password:</strong>
+
+                            {% if account.password_unique %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </p>
+
+                        <!-- RECOVERY INFORMATION -->
+                        <p>
+                            <strong>Recovery Updated:</strong>
+
+                            {% if account.recovery_updated %}
+                                Yes
+                            {% else %}
+                                No
+                            {% endif %}
+                        </p>
+
+                        <hr>
+
+<!-- ACCOUNT SECURITY SCORE -->
+<hr class="my-4">
+
+<h5 class="mb-3">
+    Overall Security Score
+</h5>
+
+{% with score=account.calculate_security_score %}
+
+    <h2 class="fw-bold">
+        {{ score }}/100
+    </h2>
+
+    <!-- SCORE PROGRESS BAR -->
+    <div class="progress mb-3"
+        role="progressbar"
+        aria-label="Account security score"
+        aria-valuenow="{{ score }}"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        style="height: 15px;">
+
+        {% if score >= 80 %}
+
+            <div class="progress-bar bg-success"
+                style="width: {{ score }}%;">
+            </div>
+
+        {% elif score >= 50 %}
+
+            <div class="progress-bar bg-warning"
+                style="width: {{ score }}%;">
+            </div>
+
+        {% else %}
+
+            <div class="progress-bar bg-danger"
+                style="width: {{ score }}%;">
+            </div>
+
+        {% endif %}
+
+    </div>
+
+{% endwith %}
+
+<p class="text-muted">
+    Security Level:
+    <strong>{{ account.get_security_level }}</strong>
+</p>
+
+                        <!-- ACTION BUTTONS -->
+                        <div class="d-flex gap-2">
+
+                            <a href="{% url 'edit_account' account.id %}" class="btn btn-primary">
+                                Edit Account
+                            </a>
+
+                            <a href="{% url 'delete_account' account.id %}" class="btn btn-danger">
+                                Delete Account
+                            </a>
+
+                        </div>
+
+                        <a href="{% url 'account_list' %}" class="btn btn-outline-secondary mt-3">
+                            Back to Accounts
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
