@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+        content="width=device-width, initial-scale=1.0">
 
     <title>SecureMe | Account Details</title>
 
@@ -172,6 +172,110 @@
             </div>
 
         </div>
+
+        <!-- ========================================= -->
+<!-- PHASE 6 - SECURITY RECOMMENDATIONS        -->
+<!-- ========================================= -->
+
+<div class="card shadow-sm border-0 mt-4">
+
+    <div class="card-header bg-dark text-white">
+
+        <h2 class="h5 mb-0">
+            🔐 Personalized Security Recommendations
+        </h2>
+
+    </div>
+
+    <div class="card-body">
+
+        <p class="text-muted">
+
+            SecureMe analyzes your account's security
+            settings and provides recommendations
+            to help improve your online security.
+
+        </p>
+
+        <!-- ================================= -->
+        <!-- RECOMMENDATIONS LOOP              -->
+        <!-- ================================= -->
+
+        {% for recommendation in recommendations %}
+
+            <div class="card mb-3 border-0 shadow-sm">
+
+                <div class="card-body">
+
+                    <!-- RECOMMENDATION TITLE -->
+
+                    <h3 class="h6 fw-bold">
+
+                        {{ recommendation.title }}
+
+                    </h3>
+
+
+                    <!-- PRIORITY BADGE -->
+
+                    {% if recommendation.priority == "High" %}
+
+                        <span class="badge bg-danger mb-2">
+                            High Priority
+                        </span>
+
+                    {% elif recommendation.priority == "Medium" %}
+
+                        <span class="badge bg-warning text-dark mb-2">
+                            Medium Priority
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-success mb-2">
+                            Low Priority
+                        </span>
+
+                    {% endif %}
+
+
+                    <!-- CATEGORY -->
+
+                    <p class="small text-muted mb-2">
+
+                        <strong>Category:</strong>
+
+                        {{ recommendation.category }}
+
+                    </p>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <p class="mb-0">
+
+                        {{ recommendation.description }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% empty %}
+
+            <div class="alert alert-success">
+
+                No security recommendations are
+                available for this account.
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
 
     </main>
 

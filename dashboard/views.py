@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from django.contrib.auth.decorators import login_required
 
+from .recommendations import generate_security_recommendations
+
 from .models import SecurityAccount
 from .forms import SecurityAccountForm
 
@@ -202,9 +204,16 @@ def add_account(request):
     )
 
 
-# VIEW ACCOUNT DETAILS
+# ============================================
+# ACCOUNT DETAILS WITH RECOMMENDATIONS
+# ============================================
+
 @login_required
 def account_detail(request, account_id):
+
+    # ========================================
+    # STEP 1: RETRIEVE THE USER'S ACCOUNT
+    # ========================================
 
     account = get_object_or_404(
         SecurityAccount,
@@ -212,10 +221,41 @@ def account_detail(request, account_id):
         user=request.user
     )
 
+    # ========================================
+    # STEP 2: CALCULATE SECURITY INFORMATION
+    # ========================================
+
+    security_score = account.calculate_security_score()
+
+    security_level = account.get_security_level()
+
+    # ========================================
+    # STEP 3: GENERATE RECOMMENDATIONS
+    # ========================================
+
+    recommendations = generate_security_recommendations(
+        account
+    )
+
+    # ========================================
+    # STEP 4: PREPARE TEMPLATE CONTEXT
+    # ========================================
+
+    context = {
+        "account": account,
+        "security_score": security_score,
+        "security_level": security_level,
+        "recommendations": recommendations
+    }
+
+    # ========================================
+    # STEP 5: DISPLAY ACCOUNT DETAILS
+    # ========================================
+
     return render(
         request,
         "dashboard/account_detail.html",
-        {"account": account}
+        context
     )
 
 
