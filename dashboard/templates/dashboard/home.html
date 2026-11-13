@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -121,26 +122,26 @@
 
                     <!-- OVERALL SCORE PROGRESS BAR -->
                     <div class="progress"
-                        role="progressbar"
-                        aria-label="Overall security score"
-                        aria-valuenow="{{ overall_score }}"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                        style="height: 20px;">
+                            role="progressbar"
+                            aria-label="Overall security score"
+                            aria-valuenow="{{ overall_score }}"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            style="height: 20px;">
 
                         {% if overall_score >= 80 %}
 
-                            <div class="progress-bar bg-success" style="width: {{ overall_score }}%;">
+                            <div class="progress-bar bg-success"style="width: {{ overall_score }}%;">
                             </div>
 
                         {% elif overall_score >= 50 %}
 
-                            <div class="progress-bar bg-warning" style="width: {{ overall_score }}%;">
+                            <div class="progress-bar bg-warning"style="width: {{ overall_score }}%;">
                             </div>
 
                         {% else %}
 
-                            <div class="progress-bar bg-danger" style="width: {{ overall_score }}%;">
+                            <div class="progress-bar bg-danger"style="width: {{ overall_score }}%;">
                             </div>
 
                         {% endif %}
@@ -159,8 +160,7 @@
                         Add your first account to begin.
                     </p>
 
-                    <a href="{% url 'add_account' %}"
-                        class="btn btn-primary">
+                    <a href="{% url 'add_account' %}" class="btn btn-primary">
                         Add Your First Account
                     </a>
 
@@ -353,8 +353,7 @@
 
                                     </div>
 
-                                    <a href="{% url 'account_detail' account.id %}"
-                                        class="btn btn-outline-primary btn-sm">
+                                    <a href="{% url 'account_detail' account.id %}" class="btn btn-outline-primary btn-sm">
                                         View Account
                                     </a>
 
@@ -389,26 +388,272 @@
         </div>
 
 
+        <!-- ======================================== -->
+        <!-- PHASE 6 - LESSON 3                       -->
+        <!-- PERSONALIZED SECURITY RECOMMENDATIONS   -->
+        <!-- ======================================== -->
+
+
+        <!-- ======================================== -->
+        <!-- PHASE 6 - LESSON 4                       -->
+        <!-- RECOMMENDATION PRIORITY SUMMARY         -->
+        <!-- ======================================== -->
+
+        <section class="mt-4 mb-4">
+
+            <h4 class="fw-bold mb-3">
+                🔐 Security Recommendation Overview
+            </h4>
+
+            <p class="text-muted">
+                Review the number of security recommendations
+                generated across your tracked accounts.
+            </p>
+
+            <div class="row g-3">
+
+                <!-- HIGH PRIORITY -->
+                <div class="col-12 col-md-4">
+
+                    <div class="card border-danger shadow-sm h-100">
+
+                        <div class="card-body text-center p-4">
+
+                            <h5 class="fw-bold text-danger">
+                                ⚠️ High Priority
+                            </h5>
+
+                            <h2 class="display-5 fw-bold text-danger">
+                                {{ high_priority_count }}
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Important security improvements
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MEDIUM PRIORITY -->
+                <div class="col-12 col-md-4">
+
+                    <div class="card border-warning shadow-sm h-100">
+
+                        <div class="card-body text-center p-4">
+
+                            <h5 class="fw-bold text-warning">
+                                ⚡ Medium Priority
+                            </h5>
+
+                            <h2 class="display-5 fw-bold text-warning">
+                                {{ medium_priority_count }}
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Recommended security improvements
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOW PRIORITY -->
+                <div class="col-12 col-md-4">
+
+                    <div class="card border-success shadow-sm h-100">
+
+                        <div class="card-body text-center p-4">
+
+                            <h5 class="fw-bold text-success">
+                                ✓ Low Priority
+                            </h5>
+
+                            <h2 class="display-5 fw-bold text-success">
+                                {{ low_priority_count }}
+                            </h2>
+
+                            <p class="text-muted mb-0">
+                                Positive security feedback
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p class="text-muted small mt-3 mb-0">
+                Counts represent individual recommendations,
+                not the number of accounts. One account may
+                have multiple recommendations.
+            </p>
+
+        </section>
+
+
+        <section class="card shadow-sm border-0 mt-4 mb-4">
+
+            <div class="card-header bg-dark text-white p-3">
+
+                <h4 class="fw-bold mb-0">
+                    🔐 Personalized Security Recommendations
+                </h4>
+
+            </div>
+
+            <div class="card-body p-4">
+
+                <p class="text-muted">
+                    SecureMe analyzes your tracked accounts
+                    and identifies security settings that
+                    may need improvement.
+                </p>
+
+
+                <!-- HIGH PRIORITY SUMMARY -->
+
+                {% if high_priority_count > 0 %}
+
+                    <div class="alert alert-danger">
+
+                        <h5 class="fw-bold">
+                            ⚠️ {{ high_priority_count }}
+                            High-Priority
+                            Recommendation{{ high_priority_count|pluralize }}
+                        </h5>
+
+                        <p class="mb-0">
+                            Review the recommendations below
+                            to improve the security of your accounts.
+                        </p>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="alert alert-success">
+
+                        <h5 class="fw-bold">
+                            No High-Priority Recommendations
+                        </h5>
+
+                        <p class="mb-0">
+                            None of your tracked accounts currently
+                            have high-priority security recommendations.
+                        </p>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- RECOMMENDATION LIST -->
+
+                
+                <!-- ======================================== -->
+                <!-- PHASE 6 - LESSON 4                       -->
+                <!-- HIGH-PRIORITY VISUAL INDICATORS         -->
+                <!-- ======================================== -->
+
+                {% for item in dashboard_recommendations %}
+
+                    <div class="card border-danger shadow-sm mb-3">
+
+                        <div class="card-body p-4">
+
+                            <!-- ACCOUNT NAME AND PRIORITY -->
+                            <div class="d-flex flex-wrap
+                                        justify-content-between
+                                        align-items-center gap-2 mb-3">
+
+                                <h5 class="fw-bold mb-0">
+                                    🔐 {{ item.account.account_name }}
+                                </h5>
+
+                                <span class="badge bg-danger">
+                                    ⚠ High Priority
+                                </span>
+
+                            </div>
+
+                            <!-- RECOMMENDATION TITLE -->
+                            <h6 class="fw-bold text-danger mb-3">
+
+                                ⚠️ {{ item.title }}
+
+                            </h6>
+
+                            <!-- RECOMMENDATION CATEGORY -->
+                            <p class="small text-muted mb-2">
+
+                                <strong>Category:</strong>
+                                {{ item.category }}
+
+                            </p>
+
+                            <!-- RECOMMENDATION DESCRIPTION -->
+                            <p class="mb-3">
+
+                                {{ item.description }}
+
+                            </p>
+
+                            <!-- ACCOUNT DETAILS LINK -->
+                            <a
+                                href="{% url 'account_detail' item.account.id %}"
+                                class="btn btn-outline-danger btn-sm">
+
+                                View Account Recommendations
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                {% empty %}
+
+                    <p class="text-muted mb-0">
+
+                        No high-priority recommendations to display.
+
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+        </section>
+
+
         <!-- DASHBOARD ACTIONS -->
         <div class="d-flex flex-wrap gap-3 mt-4">
 
-            <a href="{% url 'account_list' %}"
-                class="btn btn-primary">
+            <a href="{% url 'account_list' %}" class="btn btn-primary">
                 View All Accounts
             </a>
 
-            <a href="{% url 'add_account' %}"
-                class="btn btn-success">
+            <a href="{% url 'add_account' %}" class="btn btn-success">
                 + Add Security Account
             </a>
 
-            <a href="{% url 'password_checker' %}"
-                class="btn btn-outline-primary">
-                    🔐 Password Security Tools
+            <a href="{% url 'password_checker' %}" class="btn btn-outline-primary">
+                🔐 Password Security Tools
             </a>
 
         </div>
 
+
+        <!-- SECURITY DISCLAIMER -->
         <p class="text-muted small mt-4">
             SecureMe scores are educational estimates based on
             user-reported security settings, not independent

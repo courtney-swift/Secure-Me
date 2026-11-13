@@ -8,7 +8,10 @@ from .models import SecurityAccount
 from .forms import SecurityAccountForm
 
 
+# ============================================
 # SECUREME SECURITY DASHBOARD
+# ============================================
+
 @login_required
 def home(request):
 
@@ -39,7 +42,21 @@ def home(request):
     # ACCOUNTS THAT NEED ATTENTION
     accounts_needing_attention = []
 
+    # ========================================
+    # PHASE 6 - LESSON 4
+    # SECURITY RECOMMENDATION PRIORITY COUNTS
+    # ========================================
+
+    dashboard_recommendations = []
+
+    high_priority_count = 0
+    medium_priority_count = 0
+    low_priority_count = 0
+
+    # ========================================
     # CALCULATE SCORES FOR EACH ACCOUNT
+    # ========================================
+
     for account in accounts:
 
         score = account.calculate_security_score()
@@ -61,7 +78,47 @@ def home(request):
 
             accounts_needing_attention.append(account)
 
+        # ========================================
+        # GENERATE SECURITY RECOMMENDATIONS
+        # ========================================
+
+        recommendations = generate_security_recommendations(
+            account
+        )
+
+        # CHECK EACH RECOMMENDATION
+        for recommendation in recommendations:
+
+            priority = recommendation["priority"]
+
+            # HIGH PRIORITY
+            if priority == "High":
+
+                high_priority_count += 1
+
+                # PRESERVE HIGH-PRIORITY DASHBOARD CARDS
+                dashboard_recommendations.append({
+                    "account": account,
+                    "title": recommendation["title"],
+                    "description": recommendation["description"],
+                    "priority": priority,
+                    "category": recommendation["category"]
+                })
+
+            # MEDIUM PRIORITY
+            elif priority == "Medium":
+
+                medium_priority_count += 1
+
+            # LOW PRIORITY
+            elif priority == "Low":
+
+                low_priority_count += 1
+
+    # ========================================
     # CALCULATE OVERALL SECURITY SCORE
+    # ========================================
+
     if total_accounts > 0:
 
         overall_score = round(
@@ -72,7 +129,10 @@ def home(request):
 
         overall_score = 0
 
+    # ========================================
     # DETERMINE OVERALL SECURITY LEVEL
+    # ========================================
+
     if total_accounts == 0:
 
         overall_level = "No Accounts"
@@ -89,7 +149,10 @@ def home(request):
 
         overall_level = "Needs Improvement"
 
+    # ========================================
     # SEND DATA TO HTML TEMPLATE
+    # ========================================
+
     context = {
 
         "overall_score": overall_score,
@@ -109,6 +172,17 @@ def home(request):
         "needs_improvement": needs_improvement,
 
         "accounts_needing_attention": accounts_needing_attention,
+
+        # PHASE 6 - LESSON 4
+        # SECURITY RECOMMENDATIONS
+
+        "dashboard_recommendations": dashboard_recommendations,
+
+        "high_priority_count": high_priority_count,
+
+        "medium_priority_count": medium_priority_count,
+
+        "low_priority_count": low_priority_count,
     }
 
     return render(
@@ -118,11 +192,14 @@ def home(request):
     )
 
 
-# DISPLAY ALL ACCOUNTS
+# ============================================
 # DISPLAY ALL ACCOUNTS WITH SECURITY SCORES
+# ============================================
+
 @login_required
 def account_list(request):
 
+    # GET ONLY THE LOGGED-IN USER'S ACCOUNTS
     accounts = SecurityAccount.objects.filter(
         user=request.user
     ).order_by("account_name")
@@ -146,18 +223,11 @@ def account_list(request):
         }
     )
 
-    accounts = SecurityAccount.objects.filter(
-        user=request.user
-    ).order_by("account_name")
 
-    return render(
-        request,
-        "dashboard/account_list.html",
-        {"accounts": accounts}
-    )
-
-
+# ============================================
 # ADD A SECURITY ACCOUNT
+# ============================================
+
 @login_required
 def add_account(request):
 
@@ -259,7 +329,10 @@ def account_detail(request, account_id):
     )
 
 
+# ============================================
 # EDIT ACCOUNT
+# ============================================
+
 @login_required
 def edit_account(request, account_id):
 
@@ -317,7 +390,10 @@ def edit_account(request, account_id):
     )
 
 
+# ============================================
 # DELETE ACCOUNT
+# ============================================
+
 @login_required
 def delete_account(request, account_id):
 
@@ -339,7 +415,11 @@ def delete_account(request, account_id):
         {"account": account}
     )
 
+
+# ============================================
 # PHASE 5 - PASSWORD STRENGTH CHECKER
+# ============================================
+
 @login_required
 def password_checker(request):
 

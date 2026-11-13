@@ -2,13 +2,25 @@ from django.db import models
 from django.conf import settings
 
 
+# ============================================
+# SECUREME SECURITY ACCOUNT MODEL
+# ============================================
+
 class SecurityAccount(models.Model):
+
+    # ========================================
+    # ACCOUNT OWNER
+    # ========================================
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="security_accounts"
     )
+
+    # ========================================
+    # ACCOUNT INFORMATION
+    # ========================================
 
     account_name = models.CharField(
         max_length=100
@@ -18,6 +30,10 @@ class SecurityAccount(models.Model):
         max_length=200,
         blank=True
     )
+
+    # ========================================
+    # SECURITY SETTINGS
+    # ========================================
 
     mfa_enabled = models.BooleanField(
         default=False
@@ -41,7 +57,29 @@ class SecurityAccount(models.Model):
         default=False
     )
 
+    # ========================================
+    # PHASE 6 - LESSON 5
+    # PASSWORD CHANGE TRACKING
+    # ========================================
+
+    # This date is reported by the user.
+    # SecureMe does not store external passwords
+    # or independently verify password changes.
+
+    last_password_change = models.DateField(
+        null=True,
+        blank=True,
+        help_text=(
+            "Enter the date you last changed this "
+            "account's password. SecureMe does not "
+            "verify changes on external websites."
+        )
+    )
+
+    # ========================================
     # CALCULATE ACCOUNT SECURITY SCORE
+    # ========================================
+
     def calculate_security_score(self):
 
         score = 0
@@ -67,19 +105,26 @@ class SecurityAccount(models.Model):
 
         return score
 
+    # ========================================
     # DETERMINE SECURITY LEVEL
+    # ========================================
+
     def get_security_level(self):
-    
-            score = self.calculate_security_score()
-    
-            if score >= 80:
-                return "Good"
-    
-            elif score >= 50:
-                return "Moderate"
-    
-            else:
-                return "Needs Improvement"
+
+        score = self.calculate_security_score()
+
+        if score >= 80:
+            return "Good"
+
+        elif score >= 50:
+            return "Moderate"
+
+        else:
+            return "Needs Improvement"
+
+    # ========================================
+    # DISPLAY ACCOUNT NAME
+    # ========================================
 
     def __str__(self):
         return self.account_name
